@@ -1,0 +1,24 @@
+{
+  "name": "lapis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack --config ./webpack.config.js --mode production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.9.0",
+    "babel-loader": "^8.1.0",
+    "html-loader": "^1.1.0",
+    "webpack": "^4.42.1"
+  },
+  "devDependencies": {
+    "extract-loader": "^5.0.1",
+    "file-loader": "^6.0.0",
+    "webpack-cli": "^3.3.11"
+  }
+}
