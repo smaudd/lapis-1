@@ -7,11 +7,6 @@ export default function (env) {
     entry,
     mode: 'development',
     devtool: 'inline-source-map',
-    node: {
-      __filename: false,
-      __dirname: false
-    },
-    target: 'node',
     module: {
       rules: [
         {
@@ -59,19 +54,19 @@ export default function (env) {
       modules: [path.resolve(__dirname, 'node_modules'), 'node_modules'],
     },
     output: {
-      path: path.resolve(process.cwd(), 'dist'),
+      path: path.resolve(process.cwd(), '/dist'),
       chunkFilename: '[name].js',
       publicPath: '/dist',
       filename: 'main.js'
     },
     devServer: {
       compress: true,
-      contentBase,
+      contentBase: '/src',
       watchContentBase: true,
       port: 3000,
       stats: 'errors-only',
-      noInfo: true,
+      // noInfo: true,
     },
-    stats: 'none'
+    // stats: 'none'
   }
 }

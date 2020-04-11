@@ -1,0 +1,2 @@
+contentBase: '/src'
+entry: index.js
