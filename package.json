@@ -2,23 +2,38 @@
   "name": "lapis",
   "version": "1.0.0",
   "description": "",
-  "main": "webpack.config.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "webpack": "webpack --config ./webpack.config.js --mode production"
+    "webpack": "webpack --config ./webpack.config.js --mode production",
+    "start": "webpack-dev-server"
+  },
+  "bin": {
+    "lapis": "bin/lapis"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/core": "^7.9.0",
-    "babel-loader": "^8.1.0",
-    "html-loader": "^1.1.0",
-    "webpack": "^4.42.1"
+    "chalk": "^4.0.0",
+    "ora": "^4.0.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "babel-loader": "^8.1.0",
+    "ejs": "^3.0.2",
+    "esm": "^3.2.25",
+    "execa": "^4.0.0",
     "extract-loader": "^5.0.1",
     "file-loader": "^6.0.0",
-    "webpack-cli": "^3.3.11"
+    "html-loader": "^1.1.0",
+    "html-webpack-plugin": "^4.2.0",
+    "markdown-it": "^10.0.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "yaml": "^1.8.3"
   }
 }
