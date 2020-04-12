@@ -1,5 +1,6 @@
 import development from './commands/development'
 import createProject from './commands/create_project'
+import build from './commands/build'
 import { promises as fs } from 'fs'
 import YAML from 'yaml'
 
@@ -14,6 +15,9 @@ export async function cli(args) {
             let config = await fs.readFile(`${process.cwd()}/lapis.yml`, 'utf8')
             config = YAML.parse(config)
             development(config)
+            break
+        case 'build':
+            build(options)
             break
     }
 

@@ -9,7 +9,7 @@
     ],
     "author": "smaudd",
     "license": "ISC",
-    "dependencies": {
+    "devDependencies": {
         "lapis": "file:../lapis-1"
     }
 }
