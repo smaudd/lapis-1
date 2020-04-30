@@ -6,6 +6,7 @@ import path from 'path'
 import ejs from './src/ejs'
 import fs from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
+import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin'
 
 export default function(env) {
   const { contentBase, entry, config, contents, mode = 'development' } = env
@@ -21,41 +22,41 @@ export default function(env) {
             loader: 'babel-loader'
           }
         },
-        // {
-        //   test: /\.(yml)$/i,
-        //   use: [
-        //     {
-        //       loader: 'file-loader',
-        //       options: {
-        //         name: function(name) {
-        //           if (name.includes('index')) {
-        //             return 'index.html'
-        //           }
-        //           if (name.includes('entities')) {
-        //             let [entity] = name.split('/entities/')[1].split('/')
-        //             return `${entity}/[name]/index.html`
-        //           }
-        //           return '[name]/index.html'
-        //         }
-        //       }
-        //     },
-        //     'extract-loader',
-        //     {
-        //       loader: 'html-loader',
-        //       options: {
-        //         attributes: false,
-        //         esModule: true,
-        //         preprocessor: async function(content, loaderContext) {
-        //           try {
-        //             return ejs(content, loaderContext, config)
-        //           } catch (err) {
-        //             throw new Error(err)
-        //           }
-        //         }
-        //       }
-        //     }
-        //   ]
-        // },
+        {
+          test: /\.(yml)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: function(name) {
+                  if (name.includes('index')) {
+                    return 'index.html'
+                  }
+                  if (name.includes('entities')) {
+                    let [entity] = name.split('/entities/')[1].split('/')
+                    return `${entity}/[name]/index.html`
+                  }
+                  return '[name]/index.html'
+                }
+              }
+            },
+            'extract-loader',
+            {
+              loader: 'html-loader',
+              options: {
+                attributes: false,
+                esModule: true,
+                preprocessor: async function(content, loaderContext) {
+                  try {
+                    return ejs(content, loaderContext, config)
+                  } catch (err) {
+                    throw new Error(err)
+                  }
+                }
+              }
+            }
+          ]
+        },
         {
           test: /\.css$/,
           use: [MiniCssExtractPlugin.loader, 'css-loader']
@@ -63,7 +64,9 @@ export default function(env) {
       ]
     },
     plugins: [
+      new webpack.HotModuleReplacementPlugin(),
       ...contents,
+      new HtmlWebpackHarddiskPlugin(),
       new MiniCssExtractPlugin({
         filename: '../styles/[name].css',
         chunkFilename: '[id].css'
@@ -91,9 +94,9 @@ export default function(env) {
       compress: true,
       port: 3000,
       contentBase: ['/dist/', `${process.cwd()}/content`],
-      // progress: true,
+      progress: true,
       watchContentBase: true,
-      // publicPath: '/',
+      publicPath: '/',
       overlay: true
       // stats: 'errors-only',
       // noInfo: true

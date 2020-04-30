@@ -58,13 +58,14 @@ export default async function development(config) {
 
   Array.from([...entities, ...pages]).forEach(content => {
     const data = YAML.parse(content.yaml)
-    console.log(content.name)
     contents.push(
       new HtmlWebpackPlugin({
+        cache: false,
         template: `src/templates/${data.template}.ejs`,
         templateParameters: data,
         filename: content.name,
-        cache: false
+        hash: true,
+        alwaysWriteToDisk: true
       })
     )
   })
