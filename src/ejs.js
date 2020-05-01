@@ -4,7 +4,11 @@ import glob from 'glob'
 import YAML from 'yaml'
 import { readStream } from './helpers'
 
-export default async function(content, loaderContext, config) {
+export default async function(content, loaderContext, template) {
+  const fileLocation = loaderContext.resourcePath
+  if (fileLocation.includes('template')) {
+    return ejs.render(template, data, {})
+  }
   const data = YAML.parse(content)
   const html = await getHTML(data)
   // Read YAML files and pass data to templates
@@ -23,5 +27,12 @@ async function getHTML(data) {
   )
   return ejs.render(file, data, {})
 }
+
+// async function getHTML(data) {
+//   const file = await readStream(
+//     `${process.cwd()}/src/templates/${data.template}.ejs`
+//   )
+//   return ejs.render(file, data, {})
+// }
 
 function renderContent() {}

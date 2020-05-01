@@ -6,7 +6,7 @@ import path from 'path'
 import ejs from './src/ejs'
 import fs from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin'
+import Lapis from './src/Lapis'
 
 export default function(env) {
   const { contentBase, entry, config, contents, mode = 'development' } = env
@@ -23,12 +23,15 @@ export default function(env) {
           }
         },
         {
-          test: /\.(yml)$/i,
+          test: /\.(yml|ejs)$/,
           use: [
             {
               loader: 'file-loader',
               options: {
                 name: function(name) {
+                  if (name.includes('template')) {
+                    return 'templates/[name].ejs'
+                  }
                   if (name.includes('index')) {
                     return 'index.html'
                   }
@@ -47,6 +50,12 @@ export default function(env) {
                 attributes: false,
                 esModule: true,
                 preprocessor: async function(content, loaderContext) {
+                  const fileLocation = loaderContext.resourcePath
+                  if (fileLocation.includes('templates')) {
+                    console.log(fileLocation, 'es un template')
+                    
+                    return content
+                  }
                   try {
                     return ejs(content, loaderContext, config)
                   } catch (err) {
@@ -64,9 +73,9 @@ export default function(env) {
       ]
     },
     plugins: [
+      // ...contents,
       new webpack.HotModuleReplacementPlugin(),
-      ...contents,
-      new HtmlWebpackHarddiskPlugin(),
+      new Lapis(),
       new MiniCssExtractPlugin({
         filename: '../styles/[name].css',
         chunkFilename: '[id].css'
@@ -94,17 +103,23 @@ export default function(env) {
       compress: true,
       port: 3000,
       contentBase: ['/dist/', `${process.cwd()}/content`],
-      progress: true,
+      // progress: true,
       watchContentBase: true,
+      hot: true,
       publicPath: '/',
-      overlay: true
-      // stats: 'errors-only',
+      overlay: true,
+      after: function(app, server, compiler) {
+        compiler.hooks.watchRun.tapAsync('MisPelotas', function (watcher, callback) {
+          callback()
+        })
+      },
+      stats: 'errors-only',
       // noInfo: true
       // watchOptions: {
       //   poll: true,
       //   ignored: /node_modules/
       // }
-    }
-    // stats: 'none'
+    },
+    // stats: 'minimal'
   }
 }

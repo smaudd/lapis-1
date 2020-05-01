@@ -5,6 +5,7 @@ import chalk from 'chalk'
 import ora from 'ora'
 import fs from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
+import middleware from 'webpack-dev-middleware'
 import YAML from 'yaml'
 import { readStream } from '../helpers'
 import glob from 'glob'
@@ -37,6 +38,7 @@ export default async function development(config) {
       return {
         yaml: await readStream(`${process.cwd()}/content/pages/${page}`),
         name:
+        // Creates page path
           page.split(['.yml'])[0] === 'index'
             ? 'index.html'
             : `${page.split(['.yml'])[0]}/index.html`
@@ -62,10 +64,13 @@ export default async function development(config) {
       new HtmlWebpackPlugin({
         cache: false,
         template: `src/templates/${data.template}.ejs`,
-        templateParameters: data,
+        templateParameters: (() => {
+          // console.log('ME LLAMA EL CULEIRO')
+          return data
+        })(),
         filename: content.name,
         hash: true,
-        alwaysWriteToDisk: true
+        // alwaysWriteToDisk: true
       })
     )
   })
@@ -74,7 +79,7 @@ export default async function development(config) {
   entry = `${process.cwd()}${contentBase}/${entry}`
   contentBase = `${process.cwd()}${contentBase}`
 
-  // Generate webpack.config.js
+  // Generate webpack.config
   const conf = webpackConfig({ contentBase, entry, contents })
   // Creates compiler
   const compiler = webpack(conf)
